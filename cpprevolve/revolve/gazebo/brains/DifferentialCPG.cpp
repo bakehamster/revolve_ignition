@@ -55,7 +55,7 @@
 // This behaviour is not present if you directly load a trained controller
 
 // Define namespaces
-namespace gz = gazebo;
+namespace gz_classic = gazebo;
 using namespace revolve::gazebo;
 
 // Copied from the limbo tutorial the BO implementation is based on
@@ -147,7 +147,7 @@ DifferentialCPG::DifferentialCPG(
   this->verbose = std::stoi(controller->GetAttribute("verbose")->GetAsString());
 
   // Create transport node
-  this->node_.reset(new gz::transport::Node());
+  this->node_.reset(new gz_classic::transport::Node());
   this->node_->Init();
 
   // Get Robot

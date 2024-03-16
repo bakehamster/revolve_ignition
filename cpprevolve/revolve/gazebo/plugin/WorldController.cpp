@@ -21,7 +21,7 @@
 
 #include "WorldController.h"
 
-namespace gz = gazebo;
+namespace gz_classic = gazebo;
 
 using namespace revolve::gazebo;
 
@@ -33,13 +33,13 @@ WorldController::WorldController()
 {
 }
 
-void unsubscribe(gz::transport::SubscriberPtr &subscription)
+void unsubscribe(gz_classic::transport::SubscriberPtr &subscription)
 {
     if (subscription)
         subscription->Unsubscribe();
 }
 
-void fini(gz::transport::PublisherPtr &publisher)
+void fini(gz_classic::transport::PublisherPtr &publisher)
 {
     if (publisher)
         publisher->Fini();
@@ -57,10 +57,10 @@ WorldController::~WorldController()
 
 /////////////////////////////////////////////////
 void WorldController::Load(
-    gz::physics::WorldPtr world,
+    gz_classic::physics::WorldPtr world,
     sdf::ElementPtr /*_sdf*/)
 {
-    gz::physics::PhysicsEnginePtr physicsEngine = world->Physics();
+    gz_classic::physics::PhysicsEnginePtr physicsEngine = world->Physics();
     assert(physicsEngine != nullptr);
 
     // Turn on threading
@@ -74,7 +74,7 @@ void WorldController::Load(
   this->world_ = world;
 
   // Create transport node
-  this->node_.reset(new gz::transport::Node());
+  this->node_.reset(new gz_classic::transport::Node());
   this->node_->Init();
 
   // Subscribe to insert request messages
@@ -84,7 +84,7 @@ void WorldController::Load(
       this);
 
   // Publisher for `entity_delete` requests.
-  this->requestPub_ = this->node_->Advertise< gz::msgs::Request >(
+  this->requestPub_ = this->node_->Advertise< gz_classic::msgs::Request >(
       "~/request");
 
   // Publisher for inserted models
@@ -94,7 +94,7 @@ void WorldController::Load(
       this);
 
   // Publisher for inserted models
-  this->responsePub_ = this->node_->Advertise< gz::msgs::Response >(
+  this->responsePub_ = this->node_->Advertise< gz_classic::msgs::Response >(
       "~/response");
 
   // Since models are added asynchronously, we need some way of detecting
@@ -105,11 +105,11 @@ void WorldController::Load(
       this);
 
   // Bind to the world update event to perform some logic
-  this->onBeginUpdateConnection = gz::event::Events::ConnectWorldUpdateBegin(
+  this->onBeginUpdateConnection = gz_classic::event::Events::ConnectWorldUpdateBegin(
       [this] (const ::gazebo::common::UpdateInfo &_info) {this->OnBeginUpdate(_info);});
 
   // Bind to the world update event to perform some logic
-  this->onEndUpdateConnection = gz::event::Events::ConnectWorldUpdateEnd(
+  this->onEndUpdateConnection = gz_classic::event::Events::ConnectWorldUpdateEnd(
         [this] () {this->OnEndUpdate();});
 
   // Robot pose publisher
@@ -134,7 +134,7 @@ void WorldController::OnBeginUpdate(const ::gazebo::common::UpdateInfo &_info) {
         // Send robot info update message, this only sends the
         // main pose of the robot (which is all we need for now)
         msgs::RobotStates msg;
-        gz::msgs::Set(msg.mutable_time(), _info.simTime);
+        gz_classic::msgs::Set(msg.mutable_time(), _info.simTime);
 
         {
             boost::recursive_mutex::scoped_lock lock_physics(*this->world_->Physics()->GetPhysicsUpdateMutex());
@@ -152,7 +152,7 @@ void WorldController::OnBeginUpdate(const ::gazebo::common::UpdateInfo &_info) {
                 auto poseMsg = stateMsg->mutable_pose();
                 auto relativePose = model->RelativePose();
 
-                gz::msgs::Set(poseMsg, relativePose);
+                gz_classic::msgs::Set(poseMsg, relativePose);
 
                 // Death sentence check
                 const std::string name = model->GetName();
@@ -196,13 +196,13 @@ void WorldController::OnBeginUpdate(const ::gazebo::common::UpdateInfo &_info) {
         for (const auto &model: this->models_to_remove) {
             std::cout << "Removing " << model->GetScopedName() << std::endl;
 //            this->world_->RemoveModel(model);
-//            gz::msgs::Request deleteReq;
-//            auto id = gz::physics::getUniqueId();
+//            gz_classic::msgs::Request deleteReq;
+//            auto id = gz_classic::physics::getUniqueId();
 //            deleteReq.set_id(id);
 //            deleteReq.set_request("entity_delete");
 //            deleteReq.set_data(model->GetScopedName());
 //            this->requestPub_->Publish(deleteReq);
-            gz::transport::requestNoReply(this->world_->Name(), "entity_delete", model->GetScopedName());
+            gz_classic::transport::requestNoReply(this->world_->Name(), "entity_delete", model->GetScopedName());
             std::cout << "Removed " << model->GetScopedName() << std::endl;
 
         }
@@ -231,7 +231,7 @@ void WorldController::OnEndUpdate()
                 this->world_->RemoveModel(model);
             }
 
-            gz::msgs::Response resp;
+            gz_classic::msgs::Response resp;
             resp.set_id(request_id);
             resp.set_request("delete_robot");
             resp.set_response("success");
@@ -281,8 +281,8 @@ void WorldController::HandleRequest(ConstRequestPtr &request)
 //      // appears to be a rather involved process, instead, we'll use an
 //      // `entity_delete` request, which will make sure deleting the model
 //      // happens on the world thread.
-//      gz::msgs::Request deleteReq;
-//      auto id = gz::physics::getUniqueId();
+//      gz_classic::msgs::Request deleteReq;
+//      auto id = gz_classic::physics::getUniqueId();
 //      deleteReq.set_id(id);
 //      deleteReq.set_request("entity_delete");
 //      deleteReq.set_data(model->GetScopedName());
@@ -302,7 +302,7 @@ void WorldController::HandleRequest(ConstRequestPtr &request)
 //    {
       std::cerr << "Model `" << name << "` could not be found in the world."
                 << std::endl;
-      gz::msgs::Response resp;
+      gz_classic::msgs::Response resp;
       resp.set_id(request->id());
       resp.set_request("delete_robot");
       resp.set_response("error");
@@ -349,7 +349,7 @@ void WorldController::HandleRequest(ConstRequestPtr &request)
     std::cout << "Setting robot state update frequency to "
               << this->robotStatesPubFreq_ << "." << std::endl;
 
-    gz::msgs::Response resp;
+    gz_classic::msgs::Response resp;
     resp.set_id(request->id());
     resp.set_request("set_robot_state_update_frequency");
     resp.set_response("success");
@@ -387,14 +387,14 @@ void WorldController::OnModel(ConstModelPtr &msg)
     }
 
     // Respond with the inserted model
-    gz::msgs::Response resp;
+    gz_classic::msgs::Response resp;
     resp.set_request("insert_sdf");
     resp.set_response("success");
     resp.set_id(id);
 
     msgs::ModelInserted inserted;
     inserted.mutable_model()->CopyFrom(*msg);
-    gz::msgs::Set(inserted.mutable_time(), this->world_->SimTime());
+    gz_classic::msgs::Set(inserted.mutable_time(), this->world_->SimTime());
     inserted.SerializeToString(resp.mutable_serialized_data());
 
     this->responsePub_->Publish(resp);
@@ -429,7 +429,7 @@ void WorldController::HandleResponse(ConstResponsePtr &response)
 
 //    this->world_insert_remove_mutex.unlock();
 
-//    gz::msgs::Response resp;
+//    gz_classic::msgs::Response resp;
 //    resp.set_id(id);
 //    resp.set_request("delete_robot");
 //    resp.set_response("success");

@@ -22,7 +22,7 @@
 
 #include <revolve/gazebo/sensors/TouchSensor.h>
 
-namespace gz = gazebo;
+namespace gz_classic = gazebo;
 
 using namespace revolve::gazebo;
 
@@ -35,7 +35,7 @@ TouchSensor::TouchSensor(
     : Sensor(_model, _sensor, _partId, _sensorId, 1)
     , lastValue_(false)
 {
-  this->castSensor_ = std::dynamic_pointer_cast< gz::sensors::ContactSensor >(
+  this->castSensor_ = std::dynamic_pointer_cast< gz_classic::sensors::ContactSensor >(
       this->sensor_);
 
   if (not this->castSensor_)

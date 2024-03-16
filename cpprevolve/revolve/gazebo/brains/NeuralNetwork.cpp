@@ -31,7 +31,7 @@
 #include "../motors/Motor.h"
 #include "../sensors/Sensor.h"
 
-namespace gz = gazebo;
+namespace gz_classic = gazebo;
 
 using namespace revolve::gazebo;
 
@@ -61,7 +61,7 @@ NeuralNetwork::NeuralNetwork(
     , nNonInputs_(0)
 {
 //  // Create transport node
-//  this->node_.reset(new gz::transport::Node());
+//  this->node_.reset(new gz_classic::transport::Node());
 //  this->node_->Init();
 
 //  auto name = _model->GetName();

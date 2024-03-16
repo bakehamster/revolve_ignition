@@ -22,12 +22,12 @@
 #include <revolve/gazebo/sensors/SensorFactory.h>
 #include <revolve/gazebo/sensors/Sensors.h>
 
-namespace gz = gazebo;
+namespace gz_classic = gazebo;
 
 using namespace revolve::gazebo;
 
 /////////////////////////////////////////////////
-SensorFactory::SensorFactory(gz::physics::ModelPtr _model)
+SensorFactory::SensorFactory(gz_classic::physics::ModelPtr _model)
     : model_(_model)
 {
 }

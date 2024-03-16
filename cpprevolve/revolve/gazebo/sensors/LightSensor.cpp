@@ -21,7 +21,7 @@
 
 #include <revolve/gazebo/sensors/LightSensor.h>
 
-namespace gz = gazebo;
+namespace gz_classic = gazebo;
 
 using namespace revolve::gazebo;
 
@@ -34,7 +34,7 @@ LightSensor::LightSensor(
     : Sensor(_model, _sensor, _partId, _sensorId, 1)
     , lastValue_(1.0)
 {
-  this->castSensor_ = std::dynamic_pointer_cast< gz::sensors::CameraSensor >(
+  this->castSensor_ = std::dynamic_pointer_cast< gz_classic::sensors::CameraSensor >(
       this->sensor_);
 
   if (not this->castSensor_)

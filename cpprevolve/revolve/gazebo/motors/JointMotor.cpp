@@ -21,7 +21,7 @@
 
 #include <revolve/gazebo/motors/JointMotor.h>
 
-namespace gz = gazebo;
+namespace gz_classic = gazebo;
 
 using namespace revolve::gazebo;
 

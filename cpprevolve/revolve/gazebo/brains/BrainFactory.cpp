@@ -22,8 +22,6 @@
 #include <revolve/gazebo/brains/BrainFactory.h>
 #include <revolve/gazebo/brains/Brains.h>
 
-namespace gz = gazebo;
-
 using namespace revolve::gazebo;
 
 /////////////////////////////////////////////////

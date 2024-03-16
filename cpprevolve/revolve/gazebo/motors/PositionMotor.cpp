@@ -21,13 +21,13 @@
 
 #include "PositionMotor.h"
 
-namespace gz = gazebo;
+namespace gz_classic = gazebo;
 
 using namespace revolve::gazebo;
 
 /////////////////////////////////////////////////
 PositionMotor::PositionMotor(
-    gz::physics::ModelPtr _model,
+    gz_classic::physics::ModelPtr _model,
     const std::string &_partId,
     const std::string &_motorId,
     const sdf::ElementPtr _motor)
@@ -60,7 +60,7 @@ PositionMotor::PositionMotor(
   // to get this to work. This will result in some deprecation warnings.
   // It has the added benefit of not requiring the world update
   // connection though.
-  // updateConnection_ = gz::event::Events::ConnectWorldUpdateBegin(boost::bind(
+  // updateConnection_ = gz_classic::event::Events::ConnectWorldUpdateBegin(boost::bind(
   //   &PositionMotor::OnUpdate, this, _1));
 
   auto maxEffort = joint_->GetEffortLimit(0);

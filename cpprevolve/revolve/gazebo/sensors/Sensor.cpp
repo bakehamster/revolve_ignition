@@ -21,7 +21,7 @@
 
 #include <revolve/gazebo/sensors/Sensor.h>
 
-namespace gz = gazebo;
+namespace gz_classic = gazebo;
 
 using namespace revolve::gazebo;
 
@@ -53,7 +53,7 @@ Sensor::Sensor(
   }
 
   std::string scopedName = link->GetScopedName(true) + "::" + sensorName;
-  this->sensor_ = gz::sensors::get_sensor(scopedName);
+  this->sensor_ = gz_classic::sensors::get_sensor(scopedName);
 
   if (not this->sensor_)
   {

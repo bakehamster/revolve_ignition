@@ -27,7 +27,7 @@
 
 #include "RobotController.h"
 
-namespace gz = gazebo;
+namespace gz_classic = gazebo;
 
 using namespace revolve::gazebo;
 
@@ -59,7 +59,7 @@ void RobotController::Load(
   this->initTime_ = this->world_->SimTime().Double();
 
   // Create transport node
-  this->node_.reset(new gz::transport::Node());
+  this->node_.reset(new gz_classic::transport::Node());
   this->node_->Init();
 
   // Subscribe to robot battery state updater
@@ -67,7 +67,7 @@ void RobotController::Load(
       "~/battery_level/request",
       &RobotController::UpdateBattery,
       this);
-  this->batterySetPub_ = this->node_->Advertise< gz::msgs::Response >(
+  this->batterySetPub_ = this->node_->Advertise< gz_classic::msgs::Response >(
       "~/battery_level/response");
 
   if (not _sdf->HasElement("rv:robot_config"))
@@ -114,7 +114,7 @@ void RobotController::UpdateBattery(ConstRequestPtr &_request)
     return;
   }
 
-  gz::msgs::Response resp;
+  gz_classic::msgs::Response resp;
   resp.set_id(_request->id());
   resp.set_request(_request->request());
 
@@ -231,7 +231,7 @@ void RobotController::Startup(
     ::gazebo::physics::ModelPtr /*_parent*/,
     sdf::ElementPtr /*_sdf*/)
 {
-  this->updateConnection_ = gz::event::Events::ConnectWorldUpdateBegin(
+  this->updateConnection_ = gz_classic::event::Events::ConnectWorldUpdateBegin(
       boost::bind(&RobotController::CheckUpdate, this, _1));
 }
 

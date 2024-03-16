@@ -26,12 +26,12 @@
 
 #include "BodyAnalyzer.h"
 
-namespace gz = gazebo;
+namespace gz_classic = gazebo;
 
 using namespace revolve::gazebo;
 
 void BodyAnalyzer::Load(
-        gz::physics::WorldPtr world,
+        gz_classic::physics::WorldPtr world,
         sdf::ElementPtr /*_sdf*/)
 {
     // Store pointer to the world
@@ -46,7 +46,7 @@ void BodyAnalyzer::Load(
     currentRequest_ = -1;
 
     // Create a new transport node for advertising / subscribing
-    node_.reset(new gz::transport::Node());
+    node_.reset(new gz_classic::transport::Node());
     node_->Init();
 
     // Subscribe to the contacts message. Note that the contact manager does
@@ -71,7 +71,7 @@ void BodyAnalyzer::Load(
             this);
 
     // Publisher for the results
-    responsePub_ = node_->Advertise< gz::msgs::Response >("~/response");
+    responsePub_ = node_->Advertise< gz_classic::msgs::Response >("~/response");
 
     // Subscribe to model delete events
     deleteSub_ = node_->Subscribe(
@@ -147,7 +147,7 @@ void BodyAnalyzer::OnContacts(ConstContactsPtr &msg)
 
     // Create a response
     msgs::BodyAnalysisResponse response;
-    gz::msgs::Response wrapper;
+    gz_classic::msgs::Response wrapper;
     wrapper.set_id(currentRequest_);
     wrapper.set_request("analyze_body");
 
@@ -184,8 +184,8 @@ void BodyAnalyzer::OnContacts(ConstContactsPtr &msg)
     // My suggested fixes are present in the gazebo6-revolve branch
     auto bbox = model->BoundingBox();
     auto box = response.mutable_boundingbox();
-    gz::msgs::Set(box->mutable_min(), bbox.Min());
-    gz::msgs::Set(box->mutable_max(), bbox.Max());
+    gz_classic::msgs::Set(box->mutable_min(), bbox.Min());
+    gz_classic::msgs::Set(box->mutable_max(), bbox.Max());
 
     // Publish the message, serializing the response message in the wrapper
     // data

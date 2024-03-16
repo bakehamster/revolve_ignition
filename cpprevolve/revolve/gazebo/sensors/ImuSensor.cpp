@@ -22,7 +22,7 @@
 
 #include "ImuSensor.h"
 
-namespace gz = gazebo;
+namespace gz_classic = gazebo;
 
 using namespace revolve::gazebo;
 
@@ -34,7 +34,7 @@ ImuSensor::ImuSensor(
     const std::string &_sensorId)
     : Sensor(_model, _sensor, _partId, _sensorId, 6)
 {
-  this->castSensor_ = std::dynamic_pointer_cast< gz::sensors::ImuSensor >(
+  this->castSensor_ = std::dynamic_pointer_cast< gz_classic::sensors::ImuSensor >(
       this->sensor_);
 
   if (not this->castSensor_)

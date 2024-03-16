@@ -21,7 +21,7 @@
 
 #include <revolve/gazebo/motors/Motor.h>
 
-namespace gz = gazebo;
+namespace gz_classic = gazebo;
 
 using namespace revolve::gazebo;
 
@@ -54,7 +54,7 @@ unsigned int Motor::Outputs()
 }
 
 /////////////////////////////////////////////////
-gz::common::PID Motor::CreatePid(sdf::ElementPtr _sdfPID)
+gz_classic::common::PID Motor::CreatePid(sdf::ElementPtr _sdfPID)
 {
   auto pv = 0.0;
   auto iv = 0.0;
@@ -93,7 +93,7 @@ gz::common::PID Motor::CreatePid(sdf::ElementPtr _sdfPID)
     cmdMin = _sdfPID->GetElement("rv:cmd_min")->Get< double >();
   }
 
-  return gz::common::PID(pv, iv, dv, iMax, iMin, cmdMax, cmdMin);
+  return gz_classic::common::PID(pv, iv, dv, iMax, iMin, cmdMax, cmdMin);
 }
 
 /////////////////////////////////////////////////

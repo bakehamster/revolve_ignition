@@ -32,7 +32,7 @@
 #include "../motors/Motor.h"
 #include "../sensors/Sensor.h"
 
-namespace gz = gazebo;
+namespace gz_classic = gazebo;
 
 using namespace revolve::gazebo;
 
@@ -48,7 +48,7 @@ RLPower::RLPower(
     , evaluationRate_(30.0) // default
 {
   // Create transport node
-  this->node_.reset(new gz::transport::Node());
+  this->node_.reset(new gz_classic::transport::Node());
   this->node_->Init();
 
   auto learner_settings = _settings->GetElement("rv:learner");
